@@ -153,6 +153,8 @@ def base_p_division(dividend, divisor, p):
             remainder = (
                 tensor_fast_boolean_mul(base_p_subtraction(remainder, divisor, p), is_ge)
                 + tensor_fast_boolean_mul(remainder,(1 - is_ge))
+                # base_p_subtraction(remainder, divisor, p) * is_ge
+                # + remainder * (1 - is_ge)
             )          
             # Set the current quotient bit to 1
             quotient[i] += is_ge

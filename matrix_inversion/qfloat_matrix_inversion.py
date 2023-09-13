@@ -195,9 +195,16 @@ def qfloat_list_dot_product(list1, list2):
     if len(list1) != len(list2):
         raise ValueError("Lists should have the same length.")
 
-    result = list1[0] * list2[0]
-    for i in range(1, len(list1)):
-        result += list1[i] * list2[i]  # in place addition is supported
+    # result = list1[0] * list2[0]
+    # for i in range(1, len(list1)):
+    #     result += list1[i] * list2[i]  # in place addition is supported
+
+    multiplications = QFloat.multi_from_mul(
+        list1, list2, None, None
+    )
+    result = multiplications[0]
+    for m in multiplications[1:]:
+        result += m  # in place addition is supported    
 
     return result
 
@@ -399,7 +406,7 @@ def qfloat_lu_decomposition(M, qfloat_len, qfloat_ints, true_division=False):
 
         # l_{ij} = \frac{1}{u_{jj}} (a_{ij} - \sum_{k=1}^{j-1} u_{kj} l_{ik})
         if not true_division:
-            inv_Ujj = U[j][j].invert(
+            Ujj_inv = U[j][j].invert(
                 1, qfloat_len, 0
             )  # compute one precise invert division and then use multiplications, faster but less precise
         for i in range(j + 1, n):
@@ -407,12 +414,12 @@ def qfloat_lu_decomposition(M, qfloat_len, qfloat_ints, true_division=False):
                 s2 = qfloat_list_dot_product(
                     [U[k][j] for k in range(0, j)], [L[i][k] for k in range(0, j)]
                 )
-                # L[i][j] = (PM[i][j] - s2) * inv_Ujj
+                # L[i][j] = (PM[i][j] - s2) * Ujj_inv
                 if true_division:
                     L[i][j] = (PM[i][j] + s2.neg()) / U[j][j]
                 else:
                     L[i][j] = QFloat.from_mul(
-                        (PM[i][j] + s2.neg()), inv_Ujj, qfloat_len, qfloat_ints
+                        (PM[i][j] + s2.neg()), Ujj_inv, qfloat_len, qfloat_ints
                     )
 
             else:
@@ -420,7 +427,7 @@ def qfloat_lu_decomposition(M, qfloat_len, qfloat_ints, true_division=False):
                 if true_division:
                     L[i][j] = PM[i][j] / U[j][j]
                 else:
-                    L[i][j] = QFloat.from_mul(PM[i][j], inv_Ujj, qfloat_len, qfloat_ints)
+                    L[i][j] = QFloat.from_mul(PM[i][j], Ujj_inv, qfloat_len, qfloat_ints)
 
     # for now, PM = LU
     P = transpose_2D_list(P)
@@ -990,7 +997,7 @@ if __name__ == "__main__":
 
     # low precision
     true_division = False
-    n = 2
+    n = 3
     qfloat_base = 2
     qfloat_len = 23
     qfloat_ints = 9
