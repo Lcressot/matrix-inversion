@@ -1230,7 +1230,7 @@ if __name__ == "__main__":
 
     write_file('', True)
 
-    for n in [2, 3, 5]:
+    for n in [2, 3]:
         params[0] = n
         times = []
         write_file("Benchmark for n = " + str(n) + "\n")
