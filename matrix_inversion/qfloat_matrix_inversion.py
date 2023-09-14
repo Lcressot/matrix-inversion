@@ -187,17 +187,17 @@ def qfloat_list_dot_product(list1, list2):
     if len(list1) != len(list2):
         raise ValueError("Lists should have the same length.")
 
-    result = list1[0] * list2[0]
-    for i in range(1, len(list1)):
-        result += list1[i] * list2[i]  # in place addition is supported
+    # result = list1[0] * list2[0]
+    # for i in range(1, len(list1)):
+    #     result += list1[i] * list2[i]  # in place addition is supported
 
-    # # Tensorized way:
-    # multiplications = QFloat.multi_from_mul(
-    #     list1, list2, None, None
-    # )
-    # result = multiplications[0]
-    # for m in multiplications[1:]:
-    #     result += m  # in place addition is supported
+    # Tensorized way:
+    multiplications = QFloat.multi_from_mul(
+        list1, list2, None, None
+    )
+    result = multiplications[0]
+    for m in multiplications[1:]:
+        result += m  # in place addition is supported
 
     return result
 
@@ -483,10 +483,10 @@ def qfloat_lu_inverse(
 
     # precompute inverse of U to make less divisions (simplify U before as we know its range)
     if not true_division:
-        Ujj_inv = [U[j][j].invert(1, qfloat_len, 0) for j in range(n)]
-        # Ujj_inv = QFloat.multi_invert(
-        #     [U[j][j] for j in range(n)], 1, qfloat_len, 0
-        # )
+        #Ujj_inv = [U[j][j].invert(1, qfloat_len, 0) for j in range(n)]
+        Ujj_inv = QFloat.multi_invert(
+            [U[j][j] for j in range(n)], 1, qfloat_len, 0
+        )
     for i in range(n - 1, -1, -1):
         # X[i, -1] = Y[i, -1] / U[-1, -1]
         if true_division:
@@ -1230,7 +1230,7 @@ if __name__ == "__main__":
 
     write_file('', True)
 
-    for n in [2, 3, 5]:
+    for n in [2, 3]:
         params[0] = n
         times = []
         write_file("Benchmark for n = " + str(n) + "\n")
