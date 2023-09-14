@@ -1223,7 +1223,7 @@ if __name__ == "__main__":
 
     ## benchmarking
     def write_file(text, erase=False):
-        with open("./log-nothing.txt", "a") as file:
+        with open("./log-tensorization.txt", "a") as file:
             if erase:
                 file.truncate(0)
             file.write(text)
