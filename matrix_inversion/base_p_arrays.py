@@ -192,10 +192,10 @@ def base_p_division(dividend, divisor, p):
             is_ge = 1 - is_lt
 
             remainder = (
-                # tensor_fast_boolean_mul(difference, is_ge)
-                # + tensor_fast_boolean_mul(remainder, is_lt)
-                difference * is_ge
-                + remainder * is_lt
+                tensor_fast_boolean_mul(difference, is_ge)
+                + tensor_fast_boolean_mul(remainder, is_lt)
+                # difference * is_ge
+                # + remainder * is_lt
             )
             # Update the current quotient digit
             quotient[i] += is_ge
@@ -231,10 +231,10 @@ def multi_base_p_division(dividends, divisors, p):
             are_ge = 1 - are_lt
 
             remainders = (
-                # tensor_fast_boolean_mul(differences, are_ge)
-                # + tensor_fast_boolean_mul(remainders, are_lt)
-                differences * are_ge
-                + remainders * are_lt
+                tensor_fast_boolean_mul(differences, are_ge)
+                + tensor_fast_boolean_mul(remainders, are_lt)
+                # differences * are_ge
+                # + remainders * are_lt
             )
             # Update the current quotient digit
             quotients[:, i] += are_ge.flatten()
