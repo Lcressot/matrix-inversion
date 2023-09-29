@@ -255,7 +255,7 @@ class QFloat:
     """
 
     # keepTidy: wether to keep arrays tidy at all time. Setting to False can save time in FHE.
-    KEEP_TIDY=True
+    KEEP_TIDY=False
 
     # Statistics for counting operations between QFloats within a circuit
     ADDITIONS = 0

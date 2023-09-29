@@ -1198,7 +1198,7 @@ if __name__ == "__main__":
     qfloat_len = 23
     qfloat_ints = 9
 
-    n=3; qfloat_len = 20; qfloat_ints = 8; qf_base = 2;
+    n=3; qfloat_len = 23; qfloat_ints = 9; qf_base = 2;
 
     # # intermediate precision
     # true_division = False
