@@ -414,7 +414,7 @@ def qfloat_lu_decomposition(
                     [L[i][k] for k in range(0, i)],
                     tensorize,
                 )
-                U[i][j] = PM[i][j] + s1.neg()
+                U[i][j] = PM[i][j] - s1
             else:
                 U[i][j] = PM[i][j].copy()
 
@@ -432,10 +432,10 @@ def qfloat_lu_decomposition(
                 )
                 # L[i][j] = (PM[i][j] - s2) * inv_Ujj
                 if true_division:
-                    L[i][j] = (PM[i][j] + s2.neg()) / U[j][j]
+                    L[i][j] = (PM[i][j] - s2) / U[j][j]
                 else:
                     L[i][j] = QFloat.from_mul(
-                        (PM[i][j] + s2.neg()), inv_Ujj, qfloat_len, qfloat_ints
+                        (PM[i][j] - s2), inv_Ujj, qfloat_len, qfloat_ints
                     )
 
             else:
@@ -538,7 +538,7 @@ def qfloat_inverse_2x2(qfloat_M, qfloat_len, qfloat_ints):
         b, c, 2 * qfloat_ints + 3, 2 * qfloat_ints
     )  # produces a longer integer part
 
-    det = ad + bc.neg()  # determinant of M in 17 bits
+    det = ad - bc  # determinant of M in 17 bits
 
     det_inv = det.invert(
         1, qfloat_len, 0
@@ -566,7 +566,7 @@ def qfloat_inverse_2x2_multi(qfloat_M, qfloat_len, qfloat_ints):
         [a, b], [d, c], 2 * qfloat_ints + 3, 2 * qfloat_ints
     )  # produces a longer integer part
 
-    det = ad + bc.neg()  # determinant of M in 17 bits
+    det = ad - bc  # determinant of M in 17 bits
 
     det_inv = det.invert(
         1, qfloat_len, 0
@@ -998,7 +998,7 @@ def compile_circuit(params, sampler, circuit_function, verbose=True):
             insecure_key_cache_location=".keys",
             single_precision=False,
             show_graph=False,
-            dataflow_parallelize=True,
+            #dataflow_parallelize=True,
         ),
         verbose=False,
     )
@@ -1197,6 +1197,8 @@ if __name__ == "__main__":
     qfloat_base = 2
     qfloat_len = 23
     qfloat_ints = 9
+
+    n=3; qfloat_len = 20; qfloat_ints = 8; qf_base = 2;
 
     # # intermediate precision
     # true_division = False
